@@ -136,3 +136,8 @@ so the project is fully reproducible and free of privacy concerns.
 ## 📄 License
 
 MIT License — feel free to use this project structure for your own learning.
+
+## 👤 Author
+
+**Parnaz Ali**
+📧 parnazali1383@gmail.com
