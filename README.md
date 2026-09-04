@@ -1,116 +1,137 @@
 # 📊 Statistical Analysis Portfolio Project
 
-A complete, end-to-end statistical analysis project on a synthetic dataset
-designed to cover every major variable type and statistical test commonly
-used in applied data analysis — from data cleaning to hypothesis testing
-to regression modeling, all in Python.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Tests](https://img.shields.io/badge/tests-13%20passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+An end-to-end applied-statistics project on a synthetic dataset (2,000 rows × 22
+variables) designed to exercise every major variable type and hypothesis test
+used in practice. The goal is to demonstrate the full statistical workflow —
+data cleaning, exploratory analysis, hypothesis testing, correlation, and
+regression modeling — in clean, tested, reusable Python code rather than a
+single throwaway notebook.
+
+> **Note on the data:** the dataset is fully synthetic (generated for this
+> project, not real observations), so results describe patterns in the
+> simulated data — the point of the project is the *statistical workflow*,
+> not the substantive conclusions.
 
 ## 🎯 Project Goals
 
-- Apply core statistical concepts to a realistic, messy dataset
-- Choose the right test based on data type and distribution (parametric vs
-  non-parametric), and report the matching effect size for every test
-- Write clean, modular, reusable Python code rather than one long notebook
+- Apply core statistical concepts (descriptive statistics, hypothesis testing,
+  correlation, regression) to a realistic, "messy" dataset with missing values
+  and outliers
+- Choose the right test based on data type and distribution (parametric vs.
+  non-parametric), and cross-check parametric results against non-parametric
+  alternatives
+- Report **effect sizes** (Cohen's d, eta-squared, odds ratios) alongside
+  p-values — statistical significance alone doesn't tell you how big an
+  effect is
+- Write clean, modular, unit-tested Python code rather than one giant notebook
 - Communicate results clearly with visualizations and plain-language interpretation
 
 ## 🗂️ Project Structure
 
 ```
-final-project/
+stats-project/
 ├── data/
-│   ├── generate_raw_dataset.py    # script that generates the synthetic raw data
-│   ├── raw_dataset.csv            # 2,000 rows x 22 columns, intentionally messy
-│   └── cleaned_dataset.csv        # final cleaned dataset used in the analysis
+│   └── comprehensive_dataset.csv      # 2,000 rows × 22 columns, mixed variable types
 ├── notebooks/
-│   └── statistical_analysis.ipynb # main analysis notebook (the report)
+│   └── statistical_analysis.ipynb     # Main analysis notebook (the report)
 ├── src/
-│   ├── data_cleaning.py           # missing values, outliers, type fixes - fully documented
-│   ├── descriptive_stats.py       # summary statistics
-│   ├── hypothesis_tests.py        # t-tests, ANOVA, chi-square, correlation, effect sizes
-│   ├── regression.py              # linear & logistic regression
-│   └── visualization.py           # reusable plotting functions
-├── outputs/figures/                # saved charts (.png)
+│   ├── data_loader.py                 # Loading, missing-value handling, outlier detection
+│   ├── descriptive_stats.py           # Summary statistics, confidence intervals
+│   ├── hypothesis_tests.py            # t-tests, ANOVA, chi-square, non-parametric tests, effect sizes
+│   ├── correlation_regression.py      # Pearson/Spearman, OLS & logistic regression
+│   └── visualization.py               # Reusable plotting functions
+├── tests/
+│   └── test_statistics.py             # Unit tests for src/ (pytest)
+├── outputs/
+│   └── figures/                       # Saved charts (.png)
 ├── requirements.txt
 └── README.md
 ```
 
 ## 📦 Dataset Overview
 
-The dataset is fully synthetic (generated with `data/generate_raw_dataset.py`),
-so the project is reproducible and free of any privacy concerns.
-
 | Variable type | Columns | Purpose |
 |---|---|---|
 | Nominal | gender, education, city, treatment, group, smoker, has_disease | Chi-square, group comparisons |
-| Continuous (normal) | age, height_cm, weight_kg, bmi, score_before/after, performance | t-tests, ANOVA, correlation |
-| Continuous (skewed) | income, study_hours_week | Normality testing, transformation |
-| Ordinal | job_satisfaction_1to5 | Non-parametric handling |
-| Count | children_count | Poisson-like distribution |
+| Continuous (approx. normal) | age, height_cm, weight_kg, bmi, score_before/after, performance | t-tests, ANOVA, correlation |
+| Continuous (right-skewed) | income | Normality testing, log transformation |
+| Ordinal | job_satisfaction_1to5 | Non-parametric tests |
+| Count | children_count | Poisson-like count data |
 | Binary | passed_exam | Logistic regression |
 | Date | register_date | Time-based grouping |
 
-The raw dataset intentionally contains missing values, outliers, and a
-few impossible values (negative exam scores) to practice real-world data
-cleaning. `src/data_cleaning.py` documents, step by step, exactly how each
-issue was investigated and resolved (including why some statistical
-outliers were corrected and others were left alone after checking
-real-world plausibility).
+The dataset includes **intentional missing values** (income, height, job
+satisfaction, children count) and **injected outliers** to practice
+real-world data cleaning (IQR/Z-score detection, winsorizing).
 
-## 🧪 Research Questions & Methods
+## 🧪 Methods Covered
 
-| # | Question | Variables | Test(s) | Effect size |
-|---|---|---|---|---|
-| 1 | Does the drug improve scores vs placebo? | treatment, score_after | Independent t-test, Mann-Whitney U | Cohen's d |
-| 2 | Did scores change before → after? | score_before, score_after | Paired t-test, Wilcoxon | Cohen's d (paired) |
-| 3 | Does performance differ across groups A/B/C? | group, performance | One-way ANOVA, Tukey HSD | Eta squared |
-| 4 | Is smoking associated with disease? | smoker, has_disease | Chi-square | Cramer's V |
-| 5 | Does study time relate to exam score? | study_hours_week, exam_score | Pearson, Spearman | r / rho |
-| 6 | Predicting exam score | study_hours_week, age | Linear regression (simple & multiple) | R² |
-| 7 | Predicting exam pass/fail | exam_score, study_hours_week | Logistic regression | Odds ratios |
+- **Data cleaning:** missing-value imputation, IQR/Z-score outlier detection, winsorizing
+- **Descriptive statistics:** mean, median, mode, variance, skewness, kurtosis, 95% confidence intervals
+- **Normality testing:** Shapiro-Wilk (with a discussion of its over-sensitivity at large n)
+- **Parametric tests:** one-sample / independent / paired t-tests, one-way ANOVA + Tukey HSD post-hoc
+- **Non-parametric tests:** Mann-Whitney U, Wilcoxon signed-rank, Kruskal-Wallis (used to validate parametric results)
+- **Association tests:** chi-square test of independence
+- **Effect sizes:** Cohen's d (t-tests), eta-squared (ANOVA), odds ratios (logistic regression)
+- **Correlation:** Pearson, Spearman, correlation heatmap
+- **Regression:** simple & multiple OLS linear regression with diagnostics, logistic regression with odds ratios
 
-Every hypothesis test follows the same workflow: check normality first
-(Shapiro-Wilk), run both the parametric and non-parametric version when
-the result is borderline, then report the matching effect size — not
-just the p-value — since statistical significance and practical
-importance are two different things, especially with a large sample size.
+## 📈 Key Findings
+
+| Question | Test | Result |
+|---|---|---|
+| Does treatment increase scores? | Welch's t-test | Drug group scored significantly higher than placebo (t = 12.37, p < .001, **Cohen's d = 0.55**, medium effect) |
+| Is there improvement before → after? | Paired t-test | Significant increase in scores (t = -34.62, p < .001, **d = 0.77**, medium-large effect) |
+| Does performance differ across groups A/B/C? | ANOVA + Tukey HSD | Significant group effect (F = 105.52, p < .001, **η² = 0.10**); all three pairwise comparisons significant |
+| Is smoking associated with disease? | Chi-square | Significant association (χ² = 180.34, p < .001) |
+| Do study hours predict exam score? | OLS regression | Each extra weekly study hour → **+2.81** exam points (**R² = 0.67**) |
+| Does exam score predict passing? | Logistic regression | Exam score is a significant predictor (**OR = 1.08** per point, p < .001); study hours become non-significant once exam score is included — its effect on passing appears mediated through exam score |
+
+Every parametric result above was cross-checked with a non-parametric
+counterpart (Mann-Whitney U, Wilcoxon, Kruskal-Wallis) and reached the same
+conclusion — see Section 8 of the notebook.
+
+## 🖼️ Sample Output
+
+![Correlation Heatmap](outputs/figures/heatmap_correlation.png)
+![Performance by Group](outputs/figures/box_anova_group.png)
 
 ## 🚀 How to Run
 
 ```bash
-git clone <your-repo-url>
-cd final-project
+git clone https://github.com/ParnazAli/statistical-analysis-project.git
+cd statistical-analysis-project
 pip install -r requirements.txt
 jupyter notebook notebooks/statistical_analysis.ipynb
 ```
 
-The notebook imports all logic from `src/`, so each method can also be
-reused independently:
+Run the test suite:
 
-```python
-from src.hypothesis_tests import independent_ttest, cohens_d_independent
-result = independent_ttest(group_a, group_b)
-d = cohens_d_independent(group_a, group_b)
+```bash
+pytest tests/ -v
 ```
 
-## 📈 Sample Output
+The notebook imports all logic from `src/`, so each statistical method can
+also be reused independently:
 
-![Correlation Heatmap](outputs/figures/heatmap_correlation.png)
+```python
+from src.hypothesis_tests import independent_ttest
+result = independent_ttest(group_a, group_b, label="A vs B")
+# {'test': 'Independent t-test (Welch)', 'p_value': ..., 'cohens_d': ..., 'effect_size': 'medium'}
+```
 
 ## 🛠️ Tech Stack
 
-`Python` · `pandas` · `numpy` · `scipy` · `statsmodels` · `pingouin` · `matplotlib` · `seaborn` · `Jupyter`
+`Python` · `pandas` · `numpy` · `scipy` · `statsmodels` · `matplotlib` · `seaborn` · `pytest` · `Jupyter`
 
-## 📝 Notes on data quality
+## 📝 Notes
 
-While building this project, a bug was found in the original
-data-generation script: `weight_kg` was clipped to a floor of 45 kg for
-about 82% of rows, producing an unrealistic, non-normal distribution.
-This was traced back to the generation formula itself and fixed at the
-source (`fix_weight_and_bmi` in `src/data_cleaning.py`), regenerating
-both `weight_kg` and `bmi` from a realistic baseline BMI distribution.
-This is documented here because diagnosing and fixing this kind of
-upstream data issue — rather than just "cleaning around it" — is itself
-a core data analysis skill.
+The dataset is synthetically generated (see `data/comprehensive_dataset.csv`),
+so the project is fully reproducible and free of privacy concerns.
 
 ## 📄 License
 
