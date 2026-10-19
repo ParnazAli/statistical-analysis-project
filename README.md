@@ -1,128 +1,128 @@
-# Statistical Analysis Portfolio Project
+# Statistical Analysis Project
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Tests](https://img.shields.io/badge/tests-13%20passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-This is an end-to-end applied statistics project on a synthetic dataset (2,000 rows × 22 variables). I designed the data to cover the main variable types and the hypothesis tests used in practice. I wanted to show the whole workflow, from data cleaning and exploratory analysis to hypothesis testing, correlation and regression, in clean, tested, reusable Python code instead of one throwaway notebook.
+This project explores a synthetic dataset of 2,000 observations and 22 variables using Python. It covers the main stages of a statistical analysis workflow, from data cleaning and descriptive statistics to hypothesis testing, correlation, and regression.
 
-> **Note on the data:** the dataset is fully synthetic. I generated it for this project, so the results describe patterns in simulated data. The point here is the statistical workflow, not the conclusions. Being synthetic also means the project is fully reproducible and has no privacy concerns.
+The analysis is organized into reusable Python modules, with a Jupyter notebook bringing the methods and results together. The dataset includes missing values, outliers, and several types of variables, making it useful for exploring how different statistical methods are applied and interpreted.
 
-## Key findings
+**All data in this project is synthetic.** The findings illustrate statistical methods on simulated data and should not be interpreted as evidence about real populations or medical outcomes.
 
-| Question | Test | Result |
+## Selected findings
+
+| Research question | Method | Result |
 |---|---|---|
-| Does treatment increase scores? | Welch's t-test | The drug group scored significantly higher than placebo (t = 12.37, p < .001, Cohen's d = 0.55, medium effect) |
-| Do scores improve from before to after? | Paired t-test | Significant increase (t = -34.62, p < .001, d = 0.77, medium-large effect) |
-| Does performance differ across groups A/B/C? | ANOVA + Tukey HSD | Significant group effect (F = 105.52, p < .001, η² = 0.10), and all three pairwise comparisons are significant |
-| Is smoking associated with disease? | Chi-square | Significant association (χ² = 180.34, p < .001) |
-| Do study hours predict exam score? | OLS regression | Each extra weekly study hour adds 2.81 exam points (R² = 0.67) |
-| Does exam score predict passing? | Logistic regression | Exam score is a significant predictor (OR = 1.08 per point, p < .001). Study hours stop being significant once exam score is in the model, so their effect on passing seems to go through exam score |
+| Do post-treatment scores differ between the drug and placebo groups? | Welch's independent t-test | The drug group had higher scores in this dataset (*t* = 12.37, *p* < .001, Cohen's *d* = 0.55). |
+| Do scores differ before and after treatment? | Paired t-test | Post-treatment scores were higher on average (*t* = −34.62, *p* < .001, *d* = 0.77). |
+| Does performance vary across groups A, B, and C? | One-way ANOVA and Tukey HSD | The overall group difference was significant (*F* = 105.52, *p* < .001, η² = 0.096); all three pairwise comparisons were significant. |
+| Are smoking status and disease status associated? | Chi-square test of independence | The variables were significantly associated (χ² = 180.34, *p* < .001). |
+| How is weekly study time related to exam scores? | Simple linear regression | Each additional weekly study hour was associated with an estimated 2.81-point increase in exam score (*R*² = 0.671). |
+| Which variables predict passing the exam? | Logistic regression | Exam score was a significant predictor (odds ratio = 1.08 per point), while weekly study hours were not significant after exam score was included in the model. |
 
-I cross-checked every parametric result with a non-parametric counterpart (Mann-Whitney U, Wilcoxon, Kruskal-Wallis), and they all reached the same conclusion. See Section 8 of the notebook.
+These results describe the simulated dataset, not causal effects in real-world settings. Statistical significance is reported alongside effect sizes where available, since a small *p*-value alone does not show the magnitude or practical importance of a difference.
 
-## Sample output
+The notebook also compares selected parametric tests with non-parametric alternatives. The results agree for the group comparisons examined, providing a useful cross-check rather than a guarantee that every model assumption is satisfied.
 
-<table>
-  <tr>
-    <td width="50%"><img src="outputs/figures/heatmap_correlation.png" alt="Correlation Heatmap"></td>
-    <td width="50%"><img src="outputs/figures/box_anova_group.png" alt="Performance by Group"></td>
-  </tr>
-  <tr>
-    <td align="center">Correlation Heatmap</td>
-    <td align="center">Performance by Group</td>
-  </tr>
-</table>
+## Visual results
 
-## Project goals
+### Correlation between numerical variables
 
-- Apply core statistical concepts (descriptive statistics, hypothesis testing, correlation, regression) to a realistic, messy dataset with missing values and outliers
-- Pick the right test based on data type and distribution (parametric or non-parametric), and cross-check parametric results against non-parametric ones
-- Report effect sizes (Cohen's d, eta-squared, odds ratios) next to p-values, because significance alone doesn't say how big an effect is
-- Write modular, unit-tested Python code instead of one giant notebook
-- Explain results clearly with visualizations and plain-language interpretation
+![Correlation heatmap](outputs/figures/heatmap_correlation.png)
 
-## Dataset overview
+### Performance across experimental groups
 
-| Variable type | Columns | Purpose |
-|---|---|---|
-| Nominal | gender, education, city, treatment, group, smoker, has_disease | Chi-square, group comparisons |
-| Continuous (approx. normal) | age, height_cm, weight_kg, bmi, score_before/after, performance | t-tests, ANOVA, correlation |
-| Continuous (right-skewed) | income | Normality testing, log transformation |
-| Ordinal | job_satisfaction_1to5 | Non-parametric tests |
-| Count | children_count | Poisson-like count data |
-| Binary | passed_exam | Logistic regression |
-| Date | register_date | Time-based grouping |
+![Performance by group](outputs/figures/box_anova_group.png)
 
-The dataset has intentional missing values (income, height, job satisfaction, children count) and injected outliers, so I could practice real-world cleaning with IQR/Z-score detection and winsorizing.
+## Dataset
 
-## Methods covered
+The dataset contains 2,000 rows and 22 columns, combining numerical and categorical variables.
 
-- Data cleaning: missing-value imputation, IQR/Z-score outlier detection, winsorizing
-- Descriptive statistics: mean, median, mode, variance, skewness, kurtosis, 95% confidence intervals
-- Normality testing: Shapiro-Wilk, with a discussion of its over-sensitivity at large n
-- Parametric tests: one-sample, independent and paired t-tests, one-way ANOVA with Tukey HSD post-hoc
-- Non-parametric tests: Mann-Whitney U, Wilcoxon signed-rank, Kruskal-Wallis (used to validate the parametric results)
-- Association tests: chi-square test of independence
-- Effect sizes: Cohen's d (t-tests), eta-squared (ANOVA), odds ratios (logistic regression)
-- Correlation: Pearson, Spearman, correlation heatmap
-- Regression: simple and multiple OLS with diagnostics, logistic regression with odds ratios
+| Variable type | Examples |
+|---|---|
+| Nominal | `gender`, `education`, `city`, `treatment`, `group` |
+| Continuous | `age`, `height_cm`, `weight_kg`, `income`, `exam_score` |
+| Ordinal | `job_satisfaction_1to5` |
+| Count | `children_count` |
+| Binary | `passed_exam`, `smoker`, `has_disease` |
+| Date | `register_date` |
+
+Missing values are included in selected columns, and outliers are present in variables such as income. The analysis examines these issues before proceeding to statistical testing. The main notebook loads `data/comprehensive_dataset.csv`.
+
+## Methods
+
+- **Data preparation:** missing-value reporting and imputation, IQR-based outlier detection, and outlier capping.
+- **Descriptive analysis:** mean, median, mode, variance, skewness, kurtosis, frequency tables, and confidence intervals.
+- **Distribution assessment:** Shapiro–Wilk normality tests, with attention to the sensitivity of normality tests at large sample sizes.
+- **Hypothesis testing:** one-sample, independent-samples, and paired t-tests; one-way ANOVA; Tukey HSD post-hoc comparisons; and chi-square tests.
+- **Non-parametric methods:** Mann–Whitney U, Wilcoxon signed-rank, and Kruskal–Wallis tests.
+- **Effect sizes:** Cohen's *d* and eta-squared, alongside significance tests.
+- **Correlation:** Pearson and Spearman coefficients and a correlation matrix.
+- **Regression:** simple and multiple ordinary least squares (OLS), regression diagnostics, and logistic regression with odds ratios.
+- **Visualization:** distributions, group comparisons, scatter plots, and correlation heatmaps.
 
 ## Project structure
 
-```
-stats-project/
+```text
+statistical-analysis-project/
 ├── data/
-│   └── comprehensive_dataset.csv      # 2,000 rows × 22 columns, mixed variable types
+│   ├── cleaned_dataset.csv
+│   ├── comprehensive_dataset.csv
+│   ├── raw_dataset.csv
+│   └── generate_raw_dataset.py
 ├── notebooks/
-│   └── statistical_analysis.ipynb     # Main analysis notebook (the report)
-├── src/
-│   ├── data_loader.py                 # Loading, missing-value handling, outlier detection
-│   ├── descriptive_stats.py           # Summary statistics, confidence intervals
-│   ├── hypothesis_tests.py            # t-tests, ANOVA, chi-square, non-parametric tests, effect sizes
-│   ├── correlation_regression.py      # Pearson/Spearman, OLS & logistic regression
-│   └── visualization.py               # Reusable plotting functions
-├── tests/
-│   └── test_statistics.py             # Unit tests for src/ (pytest)
+│   └── statistical_analysis.ipynb
 ├── outputs/
-│   └── figures/                       # Saved charts (.png)
+│   └── figures/
+├── src/
+│   ├── __init__.py
+│   ├── correlation_regression.py
+│   ├── data_cleaning.py
+│   ├── data_loader.py
+│   ├── descriptive_stats.py
+│   ├── hypothesis_tests.py
+│   ├── regression.py
+│   └── visualization.py
+├── tests/
+│   └── test_statistics.py
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
-## How to run
+## Getting started
+
+Clone the repository and install the required packages:
 
 ```bash
 git clone https://github.com/ParnazAli/statistical-analysis-project.git
 cd statistical-analysis-project
 pip install -r requirements.txt
-jupyter notebook notebooks/statistical_analysis.ipynb
 ```
 
-To run the test suite:
+Run the notebook from its own directory so its relative data and source paths resolve correctly:
+
+```bash
+cd notebooks
+jupyter notebook statistical_analysis.ipynb
+```
+
+To run the test suite, open a separate terminal at the repository root and use:
 
 ```bash
 pytest tests/ -v
 ```
 
-The notebook imports all its logic from `src/`, so each statistical method can also be reused on its own:
-
-```python
-from src.hypothesis_tests import independent_ttest
-result = independent_ttest(group_a, group_b, label="A vs B")
-# {'test': 'Independent t-test (Welch)', 'p_value': ..., 'cohens_d': ..., 'effect_size': 'medium'}
-```
-
 ## Tech stack
 
-`Python` · `pandas` · `numpy` · `scipy` · `statsmodels` · `matplotlib` · `seaborn` · `pytest` · `Jupyter`
+Python · pandas · NumPy · SciPy · statsmodels · Matplotlib · Seaborn · pytest · Jupyter
 
 ## License
 
-MIT License. Feel free to use this project structure for your own learning.
+This project is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## Author
 
-Hi, I'm Parnaz Ali, the author of this project. If you have questions or want to talk about it, send me an email.
+**Parnaz Ali**
 
-[![Email](https://img.shields.io/badge/Email-parnazali1383%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:parnazali1383@gmail.com)
+[Email](mailto:parnazali1383@gmail.com)
